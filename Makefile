@@ -1,22 +1,22 @@
-NASM = nasm 
-FLAGS = -f elf32
-LD = LD
-LDFLAGS = -m elf_i386
+NASM = nasm
+NASM_FLAGS = -f elf32 -I./include/   # <-- Agregamos esta bandera
+LD = ld
+LD_FLAGS = -m elf_i386
 
-SRC = $(wildcard src/*.asm)
-OBJS = $(SRCS: .asm=.o)
-TEST_MAIN = tests/main.o 
+SRCS = $(wildcard src/*.asm)
+OBJS = $(SRCS:.asm=.o)
+TEST_MAIN = tests/main.o
 
 all: program
 
 program: $(OBJS) $(TEST_MAIN)
-	$(LD) $(LDFLAGS) $(OBJS) $(TEST_MAIN) -o program
+	$(LD) $(LD_FLAGS) $(OBJS) $(TEST_MAIN) -o program
 
-src%.o: src%.asm
-	$(NAMS) $(FLAGS) $< -o $@
+src/%.o: src/%.asm
+	$(NASM) $(NASM_FLAGS) $< -o $@
 
 tests/%.o: tests/%.asm
-	$(NASM) $(FLAGS) $< -o $@
+	$(NASM) $(NASM_FLAGS) $< -o $@
 
 clean:
-	rm -f src/*.o tests/*.o 
+	rm -f src/*.o tests/*.o program
